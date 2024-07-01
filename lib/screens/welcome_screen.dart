@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/screens/login_screen.dart';
+import 'package:flutter_chat/screens/registration_screen.dart';
+import 'package:get/get.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -40,6 +43,7 @@ class WelcomeScreen extends StatelessWidget {
                 child: MaterialButton(
                   onPressed: () {
                     //Go to login screen.
+                    Get.to(() => const LoginScreen());
                   },
                   minWidth: 200.0,
                   height: 42.0,
@@ -57,6 +61,7 @@ class WelcomeScreen extends StatelessWidget {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () {
+                    Get.to(() => const RegistrationScreen());
                     //Go to registration screen.
                   },
                   minWidth: 200.0,
