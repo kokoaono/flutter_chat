@@ -17,6 +17,7 @@ class WelcomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
                   height: 60.0,
@@ -61,7 +62,7 @@ class WelcomeScreen extends StatelessWidget {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () {
-                    Get.to(() => const RegistrationScreen());
+                    Get.to(() => RegistrationScreen());
                     //Go to registration screen.
                   },
                   minWidth: 200.0,

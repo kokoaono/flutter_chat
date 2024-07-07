@@ -1,12 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/controllers/auth_controller.dart';
 import 'package:flutter_chat/firebase_options.dart';
 import 'package:flutter_chat/screens/welcome_screen.dart';
 import 'package:get/get.dart';
 
 void main() async {
+  ///initialize Firebase using the DefaultFirebaseOptions object exported by the configuration file
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+  Get.put(AuthController());
   runApp(const FlashChat());
 }
 

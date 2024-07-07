@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/controllers/auth_controller.dart';
+import 'package:flutter_chat/screens/chat_screen.dart';
+import 'package:get/get.dart';
 
-class RegistrationScreen extends StatelessWidget {
-  const RegistrationScreen({super.key});
+class RegistrationScreen extends GetView<AuthController> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  RegistrationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +27,9 @@ class RegistrationScreen extends StatelessWidget {
               height: 48.0,
             ),
             TextField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
-              onChanged: (value) {
-                //Do something with the user input.
-              },
               decoration: const InputDecoration(
                 hintText: 'Enter your email',
                 hintStyle: TextStyle(color: Colors.grey),
@@ -47,10 +52,9 @@ class RegistrationScreen extends StatelessWidget {
               height: 8.0,
             ),
             TextField(
+              controller: _passwordController,
+              obscureText: true,
               textAlign: TextAlign.center,
-              onChanged: (value) {
-                //Do something with the user input.
-              },
               decoration: const InputDecoration(
                 hintText: 'Enter your password',
                 hintStyle: TextStyle(color: Colors.grey),
@@ -79,8 +83,20 @@ class RegistrationScreen extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(30.0)),
                 elevation: 5.0,
                 child: MaterialButton(
-                  onPressed: () {
-                    //Implement registration functionality.
+                  onPressed: () async {
+                    try {
+                      final newUser = await controller.registerNewUser(
+                        _emailController.text.trim(),
+                        _passwordController.text.trim(),
+                      );
+
+                      if (newUser != null) {
+                        print('user being created is $newUser');
+                        Get.off(() => const ChatScreen());
+                      }
+                    } catch (e) {
+                      print('Registration error $e');
+                    }
                   },
                   minWidth: 200.0,
                   height: 42.0,

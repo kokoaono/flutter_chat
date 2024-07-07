@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/screens/chat_screen.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -21,6 +24,7 @@ class LoginScreen extends StatelessWidget {
               height: 48.0,
             ),
             TextField(
+              keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
               onChanged: (value) {
                 //Do something with the user input.
@@ -49,6 +53,7 @@ class LoginScreen extends StatelessWidget {
               height: 8.0,
             ),
             TextField(
+              obscureText: true,
               textAlign: TextAlign.center,
               onChanged: (value) {
                 //Do something with the user input.
@@ -84,6 +89,7 @@ class LoginScreen extends StatelessWidget {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () {
+                    // Get.off(() => const ChatScreen());
                     //Implement login functionality.
                   },
                   minWidth: 200.0,
