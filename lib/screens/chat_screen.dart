@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/constants.dart';
+import 'package:flutter_chat/controllers/auth_controller.dart';
 
-class ChatScreen extends StatelessWidget {
+import 'package:get/get.dart';
+
+class ChatScreen extends GetView<AuthController> {
   const ChatScreen({super.key});
 
   @override
@@ -14,6 +17,8 @@ class ChatScreen extends StatelessWidget {
               icon: const Icon(Icons.close),
               onPressed: () {
                 //Implement logout functionality
+                controller.logOut();
+                Get.back();
               }),
         ],
         title: const Text('⚡️Chat'),

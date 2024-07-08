@@ -4,10 +4,7 @@ import 'package:flutter_chat/screens/chat_screen.dart';
 import 'package:get/get.dart';
 
 class RegistrationScreen extends GetView<AuthController> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  RegistrationScreen({super.key});
+  const RegistrationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +24,7 @@ class RegistrationScreen extends GetView<AuthController> {
               height: 48.0,
             ),
             TextField(
-              controller: _emailController,
+              controller: controller.emailController,
               keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
               decoration: const InputDecoration(
@@ -52,7 +49,7 @@ class RegistrationScreen extends GetView<AuthController> {
               height: 8.0,
             ),
             TextField(
-              controller: _passwordController,
+              controller: controller.passwordController,
               obscureText: true,
               textAlign: TextAlign.center,
               decoration: const InputDecoration(
@@ -84,19 +81,18 @@ class RegistrationScreen extends GetView<AuthController> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () async {
-                    try {
-                      final newUser = await controller.registerNewUser(
-                        _emailController.text.trim(),
-                        _passwordController.text.trim(),
-                      );
+                    Get.dialog(
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      barrierDismissible: false,
+                    );
 
-                      if (newUser != null) {
-                        print('user being created is $newUser');
-                        Get.off(() => const ChatScreen());
-                      }
-                    } catch (e) {
-                      print('Registration error $e');
-                    }
+                    await controller.registerNewUser(
+                      controller.emailController.text.trim(),
+                      controller.passwordController.text.trim(),
+                    );
+                    Get.off(() => const ChatScreen());
                   },
                   minWidth: 200.0,
                   height: 42.0,

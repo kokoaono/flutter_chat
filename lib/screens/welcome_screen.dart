@@ -62,8 +62,8 @@ class WelcomeScreen extends StatelessWidget {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () {
-                    Get.to(() => RegistrationScreen());
                     //Go to registration screen.
+                    Get.to(() => RegistrationScreen());
                   },
                   minWidth: 200.0,
                   height: 42.0,

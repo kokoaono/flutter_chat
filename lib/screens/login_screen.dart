@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/controllers/auth_controller.dart';
 import 'package:flutter_chat/screens/chat_screen.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends GetView<AuthController> {
   const LoginScreen({super.key});
 
   @override
@@ -24,11 +24,9 @@ class LoginScreen extends StatelessWidget {
               height: 48.0,
             ),
             TextField(
+              controller: controller.emailController,
               keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
-              onChanged: (value) {
-                //Do something with the user input.
-              },
               decoration: const InputDecoration(
                 hintText: 'Enter your email',
                 hintStyle: TextStyle(color: Colors.grey),
@@ -53,11 +51,9 @@ class LoginScreen extends StatelessWidget {
               height: 8.0,
             ),
             TextField(
+              controller: controller.passwordController,
               obscureText: true,
               textAlign: TextAlign.center,
-              onChanged: (value) {
-                //Do something with the user input.
-              },
               decoration: const InputDecoration(
                 hintText: 'Enter your password.',
                 hintStyle: TextStyle(color: Colors.grey),
@@ -88,9 +84,19 @@ class LoginScreen extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(30.0)),
                 elevation: 5.0,
                 child: MaterialButton(
-                  onPressed: () {
-                    // Get.off(() => const ChatScreen());
+                  onPressed: () async {
+                    Get.dialog(
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      barrierDismissible: false,
+                    );
                     //Implement login functionality.
+                    await controller.loginUser(
+                      controller.emailController.text,
+                      controller.passwordController.text,
+                    );
+                    Get.off(() => const ChatScreen());
                   },
                   minWidth: 200.0,
                   height: 42.0,
