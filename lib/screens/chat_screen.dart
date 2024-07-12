@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/constants.dart';
 import 'package:flutter_chat/controllers/auth_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:get/get.dart';
 
 class ChatScreen extends GetView<AuthController> {
-  const ChatScreen({super.key});
+  final _db = FirebaseFirestore.instance;
+  ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         leading: null,
         actions: <Widget>[
@@ -45,6 +48,10 @@ class ChatScreen extends GetView<AuthController> {
                   TextButton(
                     onPressed: () {
                       //Implement send functionality.
+                      // _db.collection('messages').add({
+                      //   'text': messageText,
+                      //   'sender':
+                      // });
                     },
                     child: const Text(
                       'Send',

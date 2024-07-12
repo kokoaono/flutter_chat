@@ -92,7 +92,9 @@ class RegistrationScreen extends GetView<AuthController> {
                       controller.emailController.text.trim(),
                       controller.passwordController.text.trim(),
                     );
-                    Get.off(() => const ChatScreen());
+                    Get.off(() => ChatScreen());
+                    controller.emailController.clear();
+                    controller.passwordController.clear();
                   },
                   minWidth: 200.0,
                   height: 42.0,

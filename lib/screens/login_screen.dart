@@ -85,18 +85,24 @@ class LoginScreen extends GetView<AuthController> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () async {
-                    Get.dialog(
-                      const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      barrierDismissible: false,
-                    );
-                    //Implement login functionality.
-                    await controller.loginUser(
-                      controller.emailController.text,
-                      controller.passwordController.text,
-                    );
-                    Get.off(() => const ChatScreen());
+                    try {
+                      Get.dialog(
+                        const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        barrierDismissible: false,
+                      );
+                      await controller.loginUser(
+                        controller.emailController.text.trim(),
+                        controller.passwordController.text.trim(),
+                      );
+
+                      Get.off(() => ChatScreen());
+                      controller.emailController.clear();
+                      controller.passwordController.clear();
+                    } catch (e) {
+                      print('Login failed => $e');
+                    }
                   },
                   minWidth: 200.0,
                   height: 42.0,
