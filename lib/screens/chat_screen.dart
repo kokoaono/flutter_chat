@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/constants.dart';
 import 'package:flutter_chat/controllers/auth_controller.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:get/get.dart';
 
 class ChatScreen extends GetView<AuthController> {
-  final _db = FirebaseFirestore.instance;
-  ChatScreen({super.key});
+  const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +17,10 @@ class ChatScreen extends GetView<AuthController> {
           IconButton(
               icon: const Icon(Icons.close),
               onPressed: () {
+                controller.getMessages();
                 //Implement logout functionality
-                controller.logOut();
-                Get.back();
+                // controller.logOut();
+                // Get.back();
               }),
         ],
         title: const Text('⚡️Chat'),
@@ -39,19 +38,16 @@ class ChatScreen extends GetView<AuthController> {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
-                      onChanged: (value) {
-                        //Do something with the user input.
-                      },
+                      controller: controller.chatTextController,
                       decoration: kMessageTextFieldDecoration,
                     ),
                   ),
                   TextButton(
                     onPressed: () {
-                      //Implement send functionality.
-                      // _db.collection('messages').add({
-                      //   'text': messageText,
-                      //   'sender':
-                      // });
+                      controller.addNewMsg(
+                        controller.chatTextController.text,
+                      );
+                      print('pressed');
                     },
                     child: const Text(
                       'Send',
