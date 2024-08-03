@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/models.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
   late String? _currentUser;
+  final RxList<MessageData> messagesList = <MessageData>[].obs;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -12,6 +14,8 @@ class AuthController extends GetxController {
 
   final _auth = FirebaseAuth.instance;
   final _db = FirebaseFirestore.instance;
+  final db = FirebaseFirestore.instance;
+
 
   void getCurrentUser() {
     /// This is listening to the change of auth state
@@ -23,12 +27,12 @@ class AuthController extends GetxController {
     });
   }
 
-  void getMessages() async {
-    final messages = await _db.collection('messages').get().then((event) {
-      for (var doc in event.docs) {
-        print('${doc.id} => ${doc.data()}');
+  void messagesStream() async {
+    await for (var snapShot in _db.collection('messages').snapshots()) {
+      for (var message in snapShot.docs) {
+        print(message.data());
       }
-    });
+    }
   }
 
   Future<void> addNewMsg(String text) async {
@@ -36,7 +40,7 @@ class AuthController extends GetxController {
     await _db.collection('messages').add(message);
   }
 
-  Future<void> registerNewUser(String email, String password) async {
+  Future<void> createNewUser(String email, String password) async {
     await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
@@ -52,8 +56,8 @@ class AuthController extends GetxController {
     print('I am => ${logged.user?.email}');
   }
 
-  void logOut() {
-    _auth.signOut();
+  void logOut() async {
+    await _auth.signOut();
   }
 
   @override

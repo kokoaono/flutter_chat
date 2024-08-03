@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/constants.dart';
 import 'package:flutter_chat/controllers/auth_controller.dart';
@@ -17,7 +18,7 @@ class ChatScreen extends GetView<AuthController> {
           IconButton(
               icon: const Icon(Icons.close),
               onPressed: () {
-                controller.getMessages();
+                controller.messagesStream();
                 //Implement logout functionality
                 // controller.logOut();
                 // Get.back();
@@ -31,6 +32,31 @@ class ChatScreen extends GetView<AuthController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            StreamBuilder<QuerySnapshot>(
+              stream: controller.db.collection('messages').snapshots(),
+              builder: (context, snapshot) {
+                List<Row> messageWidgets = [];
+
+                if (snapshot.hasData) {
+                  final messagesList = snapshot.data?.docs.toList();
+                  for (var message in messagesList!) {
+                    final messageWidget = Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(message['text']),
+                        Text(message['sender']),
+                      ],
+                    );
+                    messageWidgets.add(messageWidget);
+                  }
+                }
+                return Expanded(
+                  child: ListView(
+                    children: messageWidgets,
+                  ),
+                );
+              },
+            ),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
@@ -47,7 +73,6 @@ class ChatScreen extends GetView<AuthController> {
                       controller.addNewMsg(
                         controller.chatTextController.text,
                       );
-                      print('pressed');
                     },
                     child: const Text(
                       'Send',
