@@ -88,7 +88,7 @@ class RegistrationScreen extends GetView<AuthController> {
                       barrierDismissible: false,
                     );
 
-                    await controller.registerNewUser(
+                    await controller.createNewUser(
                       controller.emailController.text.trim(),
                       controller.passwordController.text.trim(),
                     );
