@@ -1,8 +1,10 @@
 # Flutter-related
 **/Flutter/ephemeral/
 **/Pods/
-macos/Flutter
 
 # Xcode-related
 **/dgph
 **/xcuserdata/
+GeneratedPluginRegistrant.swift
+generated_plugin_registrant.cc
+generated_plugins.cmake
