@@ -15,14 +15,17 @@ class RegistrationScreen extends GetView<AuthController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            SizedBox(
-              height: 200.0,
-              child: Image.asset('images/logo.png'),
+          children: [
+            Flexible(
+              child: Hero(
+                tag: 'logo',
+                child: SizedBox(
+                  height: 200.0,
+                  child: Image.asset('images/logo.png'),
+                ),
+              ),
             ),
-            const SizedBox(
-              height: 48.0,
-            ),
+            const SizedBox(height: 48.0),
             TextField(
               controller: controller.emailController,
               keyboardType: TextInputType.emailAddress,
@@ -45,9 +48,7 @@ class RegistrationScreen extends GetView<AuthController> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 8.0,
-            ),
+            const SizedBox(height: 8.0),
             TextField(
               controller: controller.passwordController,
               obscureText: true,
@@ -70,9 +71,7 @@ class RegistrationScreen extends GetView<AuthController> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 24.0,
-            ),
+            const SizedBox(height: 24.0),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Material(
@@ -92,7 +91,7 @@ class RegistrationScreen extends GetView<AuthController> {
                       controller.emailController.text.trim(),
                       controller.passwordController.text.trim(),
                     );
-                    Get.off(() => ChatScreen());
+                    Get.off(() => const ChatScreen());
                     controller.emailController.clear();
                     controller.passwordController.clear();
                   },

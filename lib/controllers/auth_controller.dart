@@ -5,38 +5,29 @@ import 'package:flutter_chat/models.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
-  late String? _currentUser;
+  late String? currentUser;
   final RxList<MessageData> messagesList = <MessageData>[].obs;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController chatTextController = TextEditingController();
+  final TextEditingController messageTextController = TextEditingController();
 
   final _auth = FirebaseAuth.instance;
   final _db = FirebaseFirestore.instance;
   final db = FirebaseFirestore.instance;
 
-
   void getCurrentUser() {
     /// This is listening to the change of auth state
     _auth.authStateChanges().listen((User? user) {
       if (user != null) {
-        final loggedInUser = user.email;
-        print(loggedInUser);
+        user.email;
       }
     });
   }
 
-  void messagesStream() async {
-    await for (var snapShot in _db.collection('messages').snapshots()) {
-      for (var message in snapShot.docs) {
-        print(message.data());
-      }
-    }
-  }
 
   Future<void> addNewMsg(String text) async {
-    final message = <String, dynamic>{'text': text, 'sender': _currentUser};
+    final message = <String, dynamic>{'text': text, 'sender': currentUser};
     await _db.collection('messages').add(message);
   }
 
@@ -52,8 +43,7 @@ class AuthController extends GetxController {
       email: email,
       password: password,
     );
-    _currentUser = logged.user?.email;
-    print('I am => ${logged.user?.email}');
+    currentUser = logged.user?.email;
   }
 
   void logOut() async {
