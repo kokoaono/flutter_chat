@@ -72,6 +72,14 @@ class RegistrationScreen extends GetView<AuthController> {
               ),
             ),
             const SizedBox(height: 24.0),
+            Obx(
+              () => Center(
+                child: Text(
+                  controller.errorMsg.value,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Material(
@@ -80,20 +88,26 @@ class RegistrationScreen extends GetView<AuthController> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () async {
-                    Get.dialog(
-                      const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      barrierDismissible: false,
-                    );
+                    String? errorMsg = controller
+                        .validatePassword(controller.passwordController.text);
+                    if (errorMsg != null) {
+                      return;
+                    } else {
+                      Get.dialog(
+                        const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        barrierDismissible: false,
+                      );
 
-                    await controller.createNewUser(
-                      controller.emailController.text.trim(),
-                      controller.passwordController.text.trim(),
-                    );
-                    Get.off(() => const ChatScreen());
-                    controller.emailController.clear();
-                    controller.passwordController.clear();
+                      await controller.createNewUser(
+                        controller.emailController.text.trim(),
+                        controller.passwordController.text.trim(),
+                      );
+                      Get.off(() => const ChatScreen());
+                      controller.emailController.clear();
+                      controller.passwordController.clear();
+                    }
                   },
                   minWidth: 200.0,
                   height: 42.0,
