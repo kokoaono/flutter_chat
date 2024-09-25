@@ -97,7 +97,7 @@ class LoginScreen extends GetView<AuthController> {
                         controller.passwordController.text.trim(),
                       );
 
-                      Get.off(() => ChatScreen());
+                      Get.off(() => const ChatScreen());
                       controller.emailController.clear();
                       controller.passwordController.clear();
                     } catch (e) {

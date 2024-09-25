@@ -9,6 +9,7 @@ class AuthController extends GetxController {
   final RxList<MessageData> messagesList = <MessageData>[].obs;
 
   final RxString errorMsg = ''.obs;
+  final RxString emailExist = ''.obs;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -40,11 +41,22 @@ class AuthController extends GetxController {
     await db.collection('messages').add(message);
   }
 
-  Future<void> createNewUser(String email, String password) async {
-    await _auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+  Future<String?> createNewUser(String email, String password) async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {
+      if (e is FirebaseAuthException) {
+        if (e.code == "email-already-in-use") {
+          return emailExist.value = "E-Mail already in use.";
+        }
+      } else {
+        print("Other Error: $e");
+      }
+    }
+    return null;
   }
 
   Future<void> loginUser(String email, String password) async {

@@ -49,6 +49,13 @@ class RegistrationScreen extends GetView<AuthController> {
               ),
             ),
             const SizedBox(height: 8.0),
+            Obx(
+              () => Text(
+                controller.emailExist.value,
+                style: const TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
+              ),
+            ),
             TextField(
               controller: controller.passwordController,
               obscureText: true,
@@ -72,14 +79,11 @@ class RegistrationScreen extends GetView<AuthController> {
               ),
             ),
             const SizedBox(height: 24.0),
-            Obx(
-              () => Center(
-                child: Text(
+            Obx(() => Text(
                   controller.errorMsg.value,
                   style: const TextStyle(color: Colors.red),
-                ),
-              ),
-            ),
+                  textAlign: TextAlign.center,
+                )),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Material(
@@ -93,16 +97,18 @@ class RegistrationScreen extends GetView<AuthController> {
                     if (errorMsg != null) {
                       return;
                     } else {
+                      String? emailExist = await controller.createNewUser(
+                        controller.emailController.text.trim(),
+                        controller.passwordController.text.trim(),
+                      );
+
+                      if (emailExist != null) null;
+
                       Get.dialog(
                         const Center(
                           child: CircularProgressIndicator(),
                         ),
                         barrierDismissible: false,
-                      );
-
-                      await controller.createNewUser(
-                        controller.emailController.text.trim(),
-                        controller.passwordController.text.trim(),
                       );
                       Get.off(() => const ChatScreen());
                       controller.emailController.clear();

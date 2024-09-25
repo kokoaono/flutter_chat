@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat/constants.dart';
 import 'package:flutter_chat/controllers/auth_controller.dart';
 import 'package:flutter_chat/screens/messages.dart';
+import 'package:flutter_chat/screens/welcome_screen.dart';
 
 import 'package:get/get.dart';
 
@@ -20,7 +21,7 @@ class ChatScreen extends GetView<AuthController> {
               onPressed: () {
                 //Implement logout functionality
                 controller.logOut();
-                Get.back();
+                Get.offAll(const WelcomeScreen());
               }),
         ],
         title: const Text('⚡️Chat'),
