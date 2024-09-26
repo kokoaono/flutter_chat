@@ -3,6 +3,8 @@ import 'package:flutter_chat/controllers/auth_controller.dart';
 import 'package:flutter_chat/screens/chat_screen.dart';
 import 'package:get/get.dart';
 
+import '../constants.dart';
+
 class RegistrationScreen extends GetView<AuthController> {
   const RegistrationScreen({super.key});
 
@@ -51,8 +53,8 @@ class RegistrationScreen extends GetView<AuthController> {
             const SizedBox(height: 8.0),
             Obx(
               () => Text(
-                controller.emailExist.value,
-                style: const TextStyle(color: Colors.red),
+                controller.emailExistMsg.value,
+                style: kWarningMessageTextStyle,
                 textAlign: TextAlign.center,
               ),
             ),
@@ -81,7 +83,7 @@ class RegistrationScreen extends GetView<AuthController> {
             const SizedBox(height: 24.0),
             Obx(() => Text(
                   controller.errorMsg.value,
-                  style: const TextStyle(color: Colors.red),
+                  style: kWarningMessageTextStyle,
                   textAlign: TextAlign.center,
                 )),
             Padding(
@@ -92,8 +94,10 @@ class RegistrationScreen extends GetView<AuthController> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () async {
-                    String? errorMsg = controller
-                        .validatePassword(controller.passwordController.text);
+                    String? errorMsg = controller.validator(
+                      controller.passwordController.text.trim(),
+                      controller.emailController.text.trim(),
+                    );
                     if (errorMsg != null) {
                       return;
                     } else {
@@ -102,7 +106,7 @@ class RegistrationScreen extends GetView<AuthController> {
                         controller.passwordController.text.trim(),
                       );
 
-                      if (emailExist != null) null;
+                      if (emailExist != null) return;
 
                       Get.dialog(
                         const Center(

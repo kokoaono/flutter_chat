@@ -9,7 +9,7 @@ class AuthController extends GetxController {
   final RxList<MessageData> messagesList = <MessageData>[].obs;
 
   final RxString errorMsg = ''.obs;
-  final RxString emailExist = ''.obs;
+  final RxString emailExistMsg = ''.obs;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -18,10 +18,10 @@ class AuthController extends GetxController {
   final _auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
 
-  String? validatePassword(String password) {
-    if (password.isEmpty) {
-      return errorMsg.value = 'Password can not be empty.';
-    } else if (password.length < 7) {
+  String? validator(String password, String email) {
+    if (password.isEmpty && email.isEmpty) {
+      return errorMsg.value = 'Please add email and password.';
+    } else if (password.length <= 6) {
       return errorMsg.value = 'Password must be longer than 6 characters';
     }
     return null;
@@ -50,7 +50,7 @@ class AuthController extends GetxController {
     } catch (e) {
       if (e is FirebaseAuthException) {
         if (e.code == "email-already-in-use") {
-          return emailExist.value = "E-Mail already in use.";
+          return emailExistMsg.value = "E-Mail already in use.";
         }
       } else {
         print("Other Error: $e");
