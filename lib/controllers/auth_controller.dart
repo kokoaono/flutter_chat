@@ -19,10 +19,15 @@ class AuthController extends GetxController {
   final db = FirebaseFirestore.instance;
 
   String? validator(String password, String email) {
-    if (password.isEmpty && email.isEmpty) {
+    emailExistMsg.value = '';
+    errorMsg.value = '';
+    if (password.isEmpty || email.isEmpty) {
       return errorMsg.value = 'Please add email and password.';
-    } else if (password.length <= 6) {
-      return errorMsg.value = 'Password must be longer than 6 characters';
+    } else if (password.length <= 5) {
+      return errorMsg.value = 'Password must be longer than 5 characters';
+    } else if (!email.contains('@') || !email.endsWith('.com')) {
+      return errorMsg.value =
+          'Please enter a valid email address (must contain "@" and end with ".com").';
     }
     return null;
   }
@@ -50,7 +55,7 @@ class AuthController extends GetxController {
     } catch (e) {
       if (e is FirebaseAuthException) {
         if (e.code == "email-already-in-use") {
-          return emailExistMsg.value = "E-Mail already in use.";
+          return emailExistMsg.value = "This email is already registered.";
         }
       } else {
         print("Other Error: $e");

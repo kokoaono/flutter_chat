@@ -28,7 +28,7 @@ class RegistrationScreen extends GetView<AuthController> {
               ),
             ),
             const SizedBox(height: 48.0),
-            TextField(
+            TextFormField(
               controller: controller.emailController,
               keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
@@ -58,7 +58,7 @@ class RegistrationScreen extends GetView<AuthController> {
                 textAlign: TextAlign.center,
               ),
             ),
-            TextField(
+            TextFormField(
               controller: controller.passwordController,
               obscureText: true,
               textAlign: TextAlign.center,
@@ -80,12 +80,12 @@ class RegistrationScreen extends GetView<AuthController> {
                 ),
               ),
             ),
-            const SizedBox(height: 24.0),
             Obx(() => Text(
                   controller.errorMsg.value,
                   style: kWarningMessageTextStyle,
                   textAlign: TextAlign.center,
                 )),
+            const SizedBox(height: 24.0),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Material(
@@ -98,16 +98,13 @@ class RegistrationScreen extends GetView<AuthController> {
                       controller.passwordController.text.trim(),
                       controller.emailController.text.trim(),
                     );
-                    if (errorMsg != null) {
+                    String? emailExist = await controller.createNewUser(
+                      controller.emailController.text.trim(),
+                      controller.passwordController.text.trim(),
+                    );
+                    if (errorMsg != null || emailExist != null) {
                       return;
                     } else {
-                      String? emailExist = await controller.createNewUser(
-                        controller.emailController.text.trim(),
-                        controller.passwordController.text.trim(),
-                      );
-
-                      if (emailExist != null) return;
-
                       Get.dialog(
                         const Center(
                           child: CircularProgressIndicator(),
