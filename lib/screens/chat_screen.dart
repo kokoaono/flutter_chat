@@ -21,7 +21,7 @@ class ChatScreen extends GetView<AuthController> {
               onPressed: () {
                 //Implement logout functionality
                 controller.logOut();
-                Get.offAll(const WelcomeScreen());
+                Get.offAll(() => const WelcomeScreen());
               }),
         ],
         title: const Text('⚡️Chat'),

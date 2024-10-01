@@ -94,15 +94,15 @@ class RegistrationScreen extends GetView<AuthController> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () async {
-                    String? errorMsg = controller.validator(
+                    String? validation = controller.validator(
                       controller.passwordController.text.trim(),
                       controller.emailController.text.trim(),
                     );
-                    String? emailExist = await controller.createNewUser(
+                    String? emailValidation = await controller.createNewUser(
                       controller.emailController.text.trim(),
                       controller.passwordController.text.trim(),
                     );
-                    if (errorMsg != null || emailExist != null) {
+                    if (validation != null || emailValidation != null) {
                       return;
                     } else {
                       Get.dialog(

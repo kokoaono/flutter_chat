@@ -5,11 +5,13 @@ import 'package:flutter_chat/models.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
-  late String? currentUser;
+  String? currentUser;
+  // late String? currentUser;
   final RxList<MessageData> messagesList = <MessageData>[].obs;
 
   final RxString errorMsg = ''.obs;
   final RxString emailExistMsg = ''.obs;
+  final RxString loginErrorMsg = ''.obs;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -52,11 +54,10 @@ class AuthController extends GetxController {
         email: email,
         password: password,
       );
-    } catch (e) {
-      if (e is FirebaseAuthException) {
-        if (e.code == "email-already-in-use") {
-          return emailExistMsg.value = "This email is already registered.";
-        }
+    } on FirebaseException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        return emailExistMsg.value =
+            'The account already exists for that email.';
       } else {
         print("Other Error: $e");
       }
@@ -64,12 +65,23 @@ class AuthController extends GetxController {
     return null;
   }
 
-  Future<void> loginUser(String email, String password) async {
-    final logged = await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    currentUser = logged.user?.email;
+  Future<String?> loginUser(String email, String password) async {
+    try {
+      final logged = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      currentUser = logged.user?.email;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        ///This is not working at moment
+        print(loginErrorMsg);
+        return loginErrorMsg.value = 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        return loginErrorMsg.value = 'Wrong password provided for that user.';
+      }
+    }
+    return null;
   }
 
   void logOut() async {

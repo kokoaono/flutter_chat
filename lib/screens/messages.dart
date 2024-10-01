@@ -27,6 +27,7 @@ class MessagesStream extends GetView<AuthController> {
             final messageSender = message['sender'];
 
             final currentUser = controller.currentUser;
+            print(currentUser);
 
             if (currentUser == messageSender) {}
 
