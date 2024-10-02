@@ -5,11 +5,14 @@ import 'package:flutter_chat/models.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
-  late String? currentUser;
+  String? currentUser;
+  // late String? currentUser;
   final RxList<MessageData> messagesList = <MessageData>[].obs;
 
   final RxString errorMsg = ''.obs;
-  final RxString emailExist = ''.obs;
+  final RxString emailExistMsg = ''.obs;
+  final RxString loginErrorMsg = ''.obs;
+  final RxString noUserExistMsg = ''.obs;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -18,11 +21,16 @@ class AuthController extends GetxController {
   final _auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
 
-  String? validatePassword(String password) {
-    if (password.isEmpty) {
-      return errorMsg.value = 'Password can not be empty.';
-    } else if (password.length < 7) {
-      return errorMsg.value = 'Password must be longer than 6 characters';
+  String? validator(String password, String email) {
+    emailExistMsg.value = '';
+    errorMsg.value = '';
+    if (password.isEmpty || email.isEmpty) {
+      return errorMsg.value = 'Please add email and password.';
+    } else if (password.length <= 5) {
+      return errorMsg.value = 'Password must be longer than 5 characters';
+    } else if (!email.contains('@') || !email.endsWith('.com')) {
+      return errorMsg.value =
+          'Please enter a valid email address (must contain "@" and end with ".com").';
     }
     return null;
   }
@@ -44,14 +52,11 @@ class AuthController extends GetxController {
   Future<String?> createNewUser(String email, String password) async {
     try {
       await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } catch (e) {
-      if (e is FirebaseAuthException) {
-        if (e.code == "email-already-in-use") {
-          return emailExist.value = "E-Mail already in use.";
-        }
+          email: email, password: password);
+    } on FirebaseException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        return emailExistMsg.value =
+            'The account already exists for that email.';
       } else {
         print("Other Error: $e");
       }
@@ -59,12 +64,24 @@ class AuthController extends GetxController {
     return null;
   }
 
-  Future<void> loginUser(String email, String password) async {
-    final logged = await _auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    currentUser = logged.user?.email;
+  Future<String?> loginUser(String email, String password) async {
+    try {
+      // final logged =
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      // currentUser = logged.user?.email;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        return loginErrorMsg.value = 'No user found for that email.';
+      } else if (e.code == 'wrong-password') {
+        return loginErrorMsg.value = 'Wrong password provided for that user.';
+      } else if (e.code == 'invalid-email') {
+        return loginErrorMsg.value = 'invalid-email';
+      } else if (e.code == 'invalid-credential') {
+        return loginErrorMsg.value =
+            'the password is invalid for the given email, or the account corresponding to the email does not have a password set.';
+      }
+    }
+    return null;
   }
 
   void logOut() async {

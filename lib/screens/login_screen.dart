@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/constants.dart';
 import 'package:flutter_chat/controllers/auth_controller.dart';
 import 'package:flutter_chat/screens/chat_screen.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,7 @@ class LoginScreen extends GetView<AuthController> {
             const SizedBox(
               height: 48.0,
             ),
-            TextField(
+            TextFormField(
               controller: controller.emailController,
               keyboardType: TextInputType.emailAddress,
               textAlign: TextAlign.center,
@@ -47,10 +48,13 @@ class LoginScreen extends GetView<AuthController> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 8.0,
-            ),
-            TextField(
+            const SizedBox(height: 8.0),
+            Obx(() => Text(
+                  controller.loginErrorMsg.value,
+                  style: kWarningMessageTextStyle,
+                  textAlign: TextAlign.center,
+                )),
+            TextFormField(
               controller: controller.passwordController,
               obscureText: true,
               textAlign: TextAlign.center,
@@ -74,9 +78,12 @@ class LoginScreen extends GetView<AuthController> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 24.0,
-            ),
+            const SizedBox(height: 24.0),
+            Obx(() => Text(
+                  controller.errorMsg.value,
+                  style: kWarningMessageTextStyle,
+                  textAlign: TextAlign.center,
+                )),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: Material(
@@ -85,30 +92,31 @@ class LoginScreen extends GetView<AuthController> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () async {
-                    try {
+                    String? validation = controller.validator(
+                      controller.passwordController.text.trim(),
+                      controller.emailController.text.trim(),
+                    );
+                    String? loginValidation = await controller.loginUser(
+                      controller.emailController.text.trim(),
+                      controller.passwordController.text.trim(),
+                    );
+                    if (loginValidation != null || validation != null) {
+                      return;
+                    } else {
                       Get.dialog(
                         const Center(
                           child: CircularProgressIndicator(),
                         ),
                         barrierDismissible: false,
                       );
-                      await controller.loginUser(
-                        controller.emailController.text.trim(),
-                        controller.passwordController.text.trim(),
-                      );
-
                       Get.off(() => const ChatScreen());
                       controller.emailController.clear();
                       controller.passwordController.clear();
-                    } catch (e) {
-                      print('Login failed => $e');
                     }
                   },
                   minWidth: 200.0,
                   height: 42.0,
-                  child: const Text(
-                    'Log In',
-                  ),
+                  child: const Text('Log In'),
                 ),
               ),
             ),
