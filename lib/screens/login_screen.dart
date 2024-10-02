@@ -49,6 +49,11 @@ class LoginScreen extends GetView<AuthController> {
               ),
             ),
             const SizedBox(height: 8.0),
+            Obx(() => Text(
+                  controller.loginErrorMsg.value,
+                  style: kWarningMessageTextStyle,
+                  textAlign: TextAlign.center,
+                )),
             TextFormField(
               controller: controller.passwordController,
               obscureText: true,
@@ -73,18 +78,9 @@ class LoginScreen extends GetView<AuthController> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 24.0,
-            ),
+            const SizedBox(height: 24.0),
             Obx(() => Text(
                   controller.errorMsg.value,
-                  style: kWarningMessageTextStyle,
-                  textAlign: TextAlign.center,
-                )),
-
-            ///TODO check the appropriate error display
-            Obx(() => Text(
-                  controller.loginErrorMsg.value,
                   style: kWarningMessageTextStyle,
                   textAlign: TextAlign.center,
                 )),
@@ -100,8 +96,6 @@ class LoginScreen extends GetView<AuthController> {
                       controller.passwordController.text.trim(),
                       controller.emailController.text.trim(),
                     );
-
-                    /// TODO double check the loginUser is doing what is supposed to be doing.
                     String? loginValidation = await controller.loginUser(
                       controller.emailController.text.trim(),
                       controller.passwordController.text.trim(),
