@@ -5,8 +5,7 @@ import 'package:flutter_chat/models.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
-  String? currentUser;
-  // late String? currentUser;
+  late User? currentUser;
   final RxList<MessageData> messagesList = <MessageData>[].obs;
 
   final RxString errorMsg = ''.obs;
@@ -39,7 +38,10 @@ class AuthController extends GetxController {
     /// This is listening to the change of auth state
     _auth.authStateChanges().listen((User? user) {
       if (user != null) {
-        user.email;
+        currentUser = user;
+        print("Current user: ${currentUser?.email}");
+      } else {
+        currentUser = null;
       }
     });
   }
@@ -49,10 +51,17 @@ class AuthController extends GetxController {
     await db.collection('messages').add(message);
   }
 
+  Future<void> addUser(String email) async {
+    Map<String, dynamic> messages = {};
+    final user = <String, dynamic>{'email': email, 'messages': messages};
+    await db.collection('users').add(user);
+  }
+
   Future<String?> createNewUser(String email, String password) async {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      await addUser(email);
     } on FirebaseException catch (e) {
       if (e.code == 'email-already-in-use') {
         return emailExistMsg.value =
@@ -75,7 +84,7 @@ class AuthController extends GetxController {
       } else if (e.code == 'wrong-password') {
         return loginErrorMsg.value = 'Wrong password provided for that user.';
       } else if (e.code == 'invalid-email') {
-        return loginErrorMsg.value = 'invalid-email';
+        return loginErrorMsg.value = 'Invalid email.';
       } else if (e.code == 'invalid-credential') {
         return loginErrorMsg.value =
             'the password is invalid for the given email, or the account corresponding to the email does not have a password set.';

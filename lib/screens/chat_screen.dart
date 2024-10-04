@@ -14,12 +14,14 @@ class ChatScreen extends GetView<AuthController> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: null,
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {},
+        ),
         actions: <Widget>[
           IconButton(
               icon: const Icon(Icons.close),
               onPressed: () {
-                //Implement logout functionality
                 controller.logOut();
                 Get.offAll(() => const WelcomeScreen());
               }),

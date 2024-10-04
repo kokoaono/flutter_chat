@@ -2,6 +2,12 @@
 
 A new Flutter project.
 
+# How to run the app
+
+1. Clone the project.
+2. cd into the folder where the project is cloned.
+3. From terminal run flutter run - select which platform you want to run the app.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

@@ -32,8 +32,8 @@ class MessagesStream extends GetView<AuthController> {
             if (currentUser == messageSender) {}
 
             final messageBubble = MessageBubble(
-              sender: messageSender,
-              text: messageText,
+              sender: messageSender ?? '',
+              text: messageText ?? '',
               isMe: currentUser == messageSender,
             );
             messageBubbles.add(messageBubble);
