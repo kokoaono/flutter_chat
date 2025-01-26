@@ -6,7 +6,7 @@ A new Flutter project.
 
 1. Clone the project.
 2. cd into the folder where the project is cloned.
-3. From terminal run flutter run - select which platform you want to run the app.
+3. From terminal run flutter run - select which platform you want to run the app(mac or chrome).
 
 ## Getting Started
 
