@@ -52,8 +52,11 @@ class AuthController extends GetxController {
   }
 
   Future<void> addUser(String email) async {
-    Map<String, dynamic> messages = {};
-    final user = <String, dynamic>{'email': email, 'messages': messages};
+    final user = <String, dynamic>{
+      'email': email,
+      'uid': currentUser?.uid,
+      'createdAt': FieldValue.serverTimestamp()
+    };
     await db.collection('users').add(user);
   }
 
