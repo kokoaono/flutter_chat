@@ -21,8 +21,6 @@ class AuthController extends GetxController {
   final db = FirebaseFirestore.instance;
 
   String? validator(String password, String email) {
-    emailExistMsg.value = '';
-    errorMsg.value = '';
     if (password.isEmpty || email.isEmpty) {
       return errorMsg.value = 'Please add email and password.';
     } else if (password.length <= 5) {
@@ -78,7 +76,6 @@ class AuthController extends GetxController {
 
   Future<String?> loginUser(String email, String password) async {
     try {
-      // final logged =
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       // currentUser = logged.user?.email;
     } on FirebaseAuthException catch (e) {
@@ -98,6 +95,11 @@ class AuthController extends GetxController {
 
   void logOut() async {
     await _auth.signOut();
+  }
+
+  void clearError() {
+    errorMsg.value = '';
+    loginErrorMsg.value = '';
   }
 
   @override

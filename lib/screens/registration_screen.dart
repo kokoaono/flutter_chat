@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat/controllers/auth_controller.dart';
 import 'package:flutter_chat/screens/chat_screen.dart';
+import 'package:flutter_chat/widgets/auth_button.dart';
 import 'package:get/get.dart';
 
 import '../constants.dart';
@@ -85,46 +86,30 @@ class RegistrationScreen extends GetView<AuthController> {
                   style: kWarningMessageTextStyle,
                   textAlign: TextAlign.center,
                 )),
-            const SizedBox(height: 24.0),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
+            AuthButtonWidget(
                 color: Colors.blueAccent,
-                borderRadius: const BorderRadius.all(Radius.circular(30.0)),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () async {
-                    String? validation = controller.validator(
-                      controller.passwordController.text.trim(),
-                      controller.emailController.text.trim(),
+                onPressed: () async {
+                  String? validation = controller.validator(
+                    controller.passwordController.text.trim(),
+                    controller.emailController.text.trim(),
+                  );
+                  String? emailValidation = await controller.createNewUser(
+                    controller.emailController.text.trim(),
+                    controller.passwordController.text.trim(),
+                  );
+                  if (validation != null || emailValidation != null) {
+                    return;
+                  } else {
+                    Get.dialog(
+                      const Center(child: CircularProgressIndicator()),
+                      barrierDismissible: false,
                     );
-                    String? emailValidation = await controller.createNewUser(
-                      controller.emailController.text.trim(),
-                      controller.passwordController.text.trim(),
-                    );
-                    if (validation != null || emailValidation != null) {
-                      return;
-                    } else {
-                      Get.dialog(
-                        const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        barrierDismissible: false,
-                      );
-                      Get.off(() => const ChatScreen());
-                      controller.emailController.clear();
-                      controller.passwordController.clear();
-                    }
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: const Text(
-                    'Register',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
+                    Get.offAll(() => const ChatScreen());
+                    controller.emailController.clear();
+                    controller.passwordController.clear();
+                  }
+                },
+                child: const Text('Register')),
           ],
         ),
       ),

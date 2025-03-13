@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat/constants.dart';
 import 'package:flutter_chat/controllers/auth_controller.dart';
 import 'package:flutter_chat/screens/chat_screen.dart';
+import 'package:flutter_chat/widgets/auth_button.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends GetView<AuthController> {
@@ -78,48 +79,38 @@ class LoginScreen extends GetView<AuthController> {
                 ),
               ),
             ),
-            const SizedBox(height: 24.0),
-            Obx(() => Text(
-                  controller.errorMsg.value,
-                  style: kWarningMessageTextStyle,
-                  textAlign: TextAlign.center,
-                )),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                color: Colors.lightBlueAccent,
-                borderRadius: const BorderRadius.all(Radius.circular(30.0)),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () async {
-                    String? validation = controller.validator(
-                      controller.passwordController.text.trim(),
-                      controller.emailController.text.trim(),
-                    );
-                    String? loginValidation = await controller.loginUser(
-                      controller.emailController.text.trim(),
-                      controller.passwordController.text.trim(),
-                    );
-                    if (loginValidation != null || validation != null) {
-                      return;
-                    } else {
-                      Get.dialog(
-                        const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        barrierDismissible: false,
-                      );
-                      Get.off(() => const ChatScreen());
-                      controller.emailController.clear();
-                      controller.passwordController.clear();
-                    }
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: const Text('Log In'),
-                ),
+            Obx(
+              () => Text(
+                controller.errorMsg.value,
+                style: kWarningMessageTextStyle,
+                textAlign: TextAlign.center,
               ),
             ),
+            AuthButtonWidget(
+                color: Colors.lightBlueAccent,
+                onPressed: () async {
+                  String? validation = controller.validator(
+                    controller.passwordController.text.trim(),
+                    controller.emailController.text.trim(),
+                  );
+                  String? loginValidation = await controller.loginUser(
+                    controller.emailController.text.trim(),
+                    controller.passwordController.text.trim(),
+                  );
+                  if (loginValidation != null || validation != null) {
+                    return;
+                  } else {
+                    Get.dialog(
+                      const Center(child: CircularProgressIndicator()),
+                      barrierDismissible: false,
+                    );
+                    Get.offAll(() => const ChatScreen());
+                    controller.clearError();
+                    controller.emailController.clear();
+                    controller.passwordController.clear();
+                  }
+                },
+                child: const Text('Log In')),
           ],
         ),
       ),

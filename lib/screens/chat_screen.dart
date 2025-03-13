@@ -20,7 +20,10 @@ class ChatScreen extends GetView<AuthController> {
         ),
         actions: <Widget>[
           IconButton(
-              icon: const Icon(Icons.close),
+              icon: const Icon(
+                Icons.close,
+                color: Colors.black,
+              ),
               onPressed: () {
                 controller.logOut();
                 Get.offAll(() => const WelcomeScreen());

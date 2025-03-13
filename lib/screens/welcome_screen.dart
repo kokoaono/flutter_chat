@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat/controllers/auth_controller.dart';
 import 'package:flutter_chat/screens/login_screen.dart';
 import 'package:flutter_chat/screens/registration_screen.dart';
+import 'package:flutter_chat/widgets/auth_button.dart';
 import 'package:get/get.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -32,47 +34,21 @@ class WelcomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 48.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                elevation: 5.0,
+            const SizedBox(height: 48.0),
+            AuthButtonWidget(
                 color: Colors.lightBlueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                child: MaterialButton(
-                  onPressed: () {
-                    //Go to login screen.
-                    Get.to(() => const LoginScreen());
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: const Text(
-                    'Log In',
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
+                onPressed: () {
+                  Get.to(() => const LoginScreen());
+                  Get.find<AuthController>().clearError();
+                },
+                child: const Text('Log In')),
+            AuthButtonWidget(
                 color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () {
-                    //Go to registration screen.
-                    Get.to(() => const RegistrationScreen());
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: const Text(
-                    'Register',
-                  ),
-                ),
-              ),
-            ),
+                onPressed: () {
+                  Get.to(() => const RegistrationScreen());
+                  Get.find<AuthController>().clearError();
+                },
+                child: const Text('Register')),
           ],
         ),
       ),
